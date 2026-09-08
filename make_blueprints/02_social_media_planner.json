@@ -1,6 +1,6 @@
 {
-  "name": "Sosyal Medya Otomatik İçerik Planlayıcı",
-  "description": "Google Sheets'teki içerik takviminizi okur, ChatGPT ile optimize eder ve Instagram, Twitter/X ve LinkedIn'e otomatik zamanlanmış paylaşım yapar.",
+  "name": "Social Media Auto Content Planner",
+  "description": "Reads your content calendar in Google Sheets, optimizes it with ChatGPT, and automatically schedules posts to Instagram, Twitter/X, and LinkedIn.",
   "version": 2,
   "metadata": {
     "instant": false,
@@ -19,12 +19,12 @@
       "version": 1,
       "parameters": {
         "spreadsheetId": "{{GOOGLE_SHEETS_ID}}",
-        "sheetId": "İçerik Takvimi",
+        "sheetId": "Content Calendar",
         "includesHeaders": true,
         "filter": {
           "condition": {
             "a": "{{Status}}",
-            "b": "Hazır",
+            "b": "Ready",
             "o": "text:equal"
           }
         }
@@ -44,11 +44,11 @@
         "messages": [
           {
             "role": "system",
-            "content": "Sen bir sosyal medya uzmanısın. Verilen konuyu platforma özel, viral olma potansiyeli yüksek içeriklere dönüştürüyorsun. Her platform için ayrı ton ve format kullan."
+            "content": "You are a social media expert. You turn a given topic into platform-specific content with high viral potential. Use a distinct tone and format for each platform."
           },
           {
             "role": "user",
-            "content": "Şu konu için 3 farklı platform içeriği üret:\n\nKonu: {{1.Konu}}\nHedef Kitle: {{1.Hedef_Kitle}}\nMarka Tonu: {{1.Ton}}\nHashtag Sayısı: {{1.Hashtag_Sayisi}}\n\nJSON formatında döndür:\n{\n  'instagram': {'caption': '...', 'hashtags': '...'},\n  'twitter': {'tweet': '...'},\n  'linkedin': {'post': '...'}\n}"
+            "content": "Generate content for 3 different platforms for the following topic:\n\nTopic: {{1.Topic}}\nTarget Audience: {{1.Target_Audience}}\nBrand Tone: {{1.Tone}}\nHashtag Count: {{1.Hashtag_Count}}\n\nReturn it in JSON format:\n{\n  'instagram': {'caption': '...', 'hashtags': '...'},\n  'twitter': {'tweet': '...'},\n  'linkedin': {'post': '...'}\n}"
           }
         ],
         "max_tokens": 800,
@@ -81,7 +81,7 @@
       "mapper": {
         "profile_ids": ["{{INSTAGRAM_PROFILE_ID}}", "{{TWITTER_PROFILE_ID}}", "{{LINKEDIN_PROFILE_ID}}"],
         "text": "{{3.instagram.caption}} {{3.instagram.hashtags}}",
-        "scheduled_at": "{{1.Yayın_Tarihi}}"
+        "scheduled_at": "{{1.Publish_Date}}"
       },
       "metadata": {
         "designer": { "x": 900, "y": 0 }
@@ -93,12 +93,12 @@
       "version": 1,
       "parameters": {
         "spreadsheetId": "{{GOOGLE_SHEETS_ID}}",
-        "sheetId": "İçerik Takvimi",
+        "sheetId": "Content Calendar",
         "rowNumber": "{{1.__ROW_NUMBER__}}"
       },
       "mapper": {
-        "Status": "✅ Planlandı",
-        "Planlanma_Tarihi": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}",
+        "Status": "✅ Scheduled",
+        "Scheduled_Date": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}",
         "Buffer_ID": "{{4.id}}"
       },
       "metadata": {
@@ -114,7 +114,7 @@
       },
       "mapper": {
         "channel": "{{SLACK_CHANNEL}}",
-        "text": "✅ *Yeni İçerik Planlandı!*\n📅 Tarih: {{1.Yayın_Tarihi}}\n📝 Konu: {{1.Konu}}\n📱 Platformlar: Instagram, Twitter, LinkedIn"
+        "text": "✅ *New Content Scheduled!*\n📅 Date: {{1.Publish_Date}}\n📝 Topic: {{1.Topic}}\n📱 Platforms: Instagram, Twitter, LinkedIn"
       },
       "metadata": {
         "designer": { "x": 1500, "y": 0 }
@@ -122,17 +122,17 @@
     }
   ],
   "_SETUP_NOTES": {
-    "gerekli_hesaplar": ["Google Sheets", "OpenAI API", "Buffer veya Hootsuite", "Slack (opsiyonel)"],
-    "sheets_sutunlari": ["Konu", "Hedef_Kitle", "Ton", "Hashtag_Sayisi", "Yayın_Tarihi", "Status", "Planlanma_Tarihi", "Buffer_ID"],
-    "calisma_zamani": "Her gün sabah 08:00'de otomatik çalışır ve 'Hazır' statusündeki içerikleri işler",
-    "degistirmeniz_gerekenler": {
-      "GOOGLE_SHEETS_ID": "İçerik takvim spreadsheet ID'si",
-      "BUFFER_ACCOUNT": "Buffer OAuth bağlantısı",
-      "INSTAGRAM_PROFILE_ID": "Buffer'daki Instagram profil ID",
-      "TWITTER_PROFILE_ID": "Buffer'daki Twitter profil ID",
-      "LINKEDIN_PROFILE_ID": "Buffer'daki LinkedIn profil ID",
-      "SLACK_ACCOUNT": "Slack OAuth bağlantısı",
-      "SLACK_CHANNEL": "#sosyal-medya veya istediğiniz kanal"
+    "required_accounts": ["Google Sheets", "OpenAI API", "Buffer or Hootsuite", "Slack (optional)"],
+    "sheets_columns": ["Topic", "Target_Audience", "Tone", "Hashtag_Count", "Publish_Date", "Status", "Scheduled_Date", "Buffer_ID"],
+    "run_time": "Runs automatically every day at 8:00 AM and processes rows with a 'Ready' status",
+    "what_to_change": {
+      "GOOGLE_SHEETS_ID": "The content calendar spreadsheet ID",
+      "BUFFER_ACCOUNT": "Buffer OAuth connection",
+      "INSTAGRAM_PROFILE_ID": "Instagram profile ID in Buffer",
+      "TWITTER_PROFILE_ID": "Twitter profile ID in Buffer",
+      "LINKEDIN_PROFILE_ID": "LinkedIn profile ID in Buffer",
+      "SLACK_ACCOUNT": "Slack OAuth connection",
+      "SLACK_CHANNEL": "#social-media or any channel you prefer"
     }
   }
 }

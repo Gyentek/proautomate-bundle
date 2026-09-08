@@ -16,13 +16,13 @@
       "event": "Create Database Item",
       "config": {
         "database": "{{NOTION_ORDERS_DB}}",
-        "Sipariş No": "#{{1__number}}",
-        "Müşteri": "{{1__billing_first_name}} {{1__billing_last_name}}",
-        "E-posta": "{{1__billing_email}}",
-        "Tutar": "{{1__total}} {{1__currency}}",
-        "Ürünler": "{{1__line_items__0__name}}",
-        "Durum": "Yeni Sipariş",
-        "Tarih": "{{1__date_created}}"
+        "Order No": "#{{1__number}}",
+        "Customer": "{{1__billing_first_name}} {{1__billing_last_name}}",
+        "Email": "{{1__billing_email}}",
+        "Amount": "{{1__total}} {{1__currency}}",
+        "Products": "{{1__line_items__0__name}}",
+        "Status": "New Order",
+        "Date": "{{1__date_created}}"
       }
     },
     {
@@ -31,7 +31,7 @@
       "event": "Send Channel Message",
       "config": {
         "channel": "{{SLACK_CHANNEL}}",
-        "message": "🛒 *Yeni WooCommerce Siparişi!*\n👤 Müşteri: {{1__billing_first_name}} {{1__billing_last_name}}\n💰 Tutar: {{1__total}} {{1__currency}}\n📦 Ürün: {{1__line_items__0__name}}\n✅ Notion'a eklendi!"
+        "message": "🛒 *New WooCommerce Order!*\n👤 Customer: {{1__billing_first_name}} {{1__billing_last_name}}\n💰 Amount: {{1__total}} {{1__currency}}\n📦 Product: {{1__line_items__0__name}}\n✅ Added to Notion!"
       }
     }
   ]

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Şablon 01: Etsy E-posta Kurulum Rehberi</title>
+  <title>Template 01: Etsy Email Setup Guide</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     :root { --primary:#6C47FF; --primary-light:#8B6FFF; --accent:#00D4AA; --dark:#0A0A1A; --dark2:#111128; --card:#16163A; --text:#E8E8FF; --text-muted:#9090BB; --border:rgba(108,71,255,0.25); }
@@ -47,138 +47,138 @@
 <body>
 <nav class="sidebar">
   <div class="sidebar-logo">Pro<span>Automate</span></div>
-  <div class="nav-label">Navigasyon</div>
-  <a href="baslangic_rehberi.html" class="nav-link">← Başlangıç Rehberi</a>
-  <div class="nav-label">Şablonlar</div>
-  <a href="01_etsy_kurulum.html" class="nav-link active"><span class="num">01</span> Etsy E-posta</a>
-  <a href="02_sosyal_medya_kurulum.html" class="nav-link"><span class="num">02</span> Sosyal Medya</a>
-  <a href="03_woocommerce_kurulum.html" class="nav-link"><span class="num">03</span> WooCommerce</a>
-  <a href="04_icerik_uretici_kurulum.html" class="nav-link"><span class="num">04</span> İçerik Üretici</a>
+  <div class="nav-label">Navigation</div>
+  <a href="getting-started.html" class="nav-link">← Getting Started Guide</a>
+  <div class="nav-label">Templates</div>
+  <a href="01_etsy_setup.html" class="nav-link active"><span class="num">01</span> Etsy Email</a>
+  <a href="02_social_media_setup.html" class="nav-link"><span class="num">02</span> Social Media</a>
+  <a href="03_woocommerce_setup.html" class="nav-link"><span class="num">03</span> WooCommerce</a>
+  <a href="04_content_generator_setup.html" class="nav-link"><span class="num">04</span> Content Generator</a>
 </nav>
 <main class="main">
-  <p style="color:var(--primary-light);font-size:13px;font-weight:700;margin-bottom:8px;">ŞABLON 01 · KURULUM REHBERİ</p>
-  <h1>📧 Etsy Sipariş →<br>Teşekkür E-postası</h1>
-  <p style="font-size:1.05rem;color:var(--text);">Etsy'den yeni sipariş geldiğinde ChatGPT otomatik olarak müşteriye özel bir teşekkür e-postası yazar ve Gmail'den gönderir.</p>
+  <p style="color:var(--primary-light);font-size:13px;font-weight:700;margin-bottom:8px;">TEMPLATE 01 · SETUP GUIDE</p>
+  <h1>📧 Etsy Order →<br>Thank-You Email</h1>
+  <p style="font-size:1.05rem;color:var(--text);">When a new Etsy order comes in, ChatGPT automatically writes a personalized thank-you email for the customer and sends it via Gmail.</p>
 
   <div class="flow-diagram">
-    <div class="flow-node"><span class="icon">🛍️</span>Etsy<br>Siparişi</div>
+    <div class="flow-node"><span class="icon">🛍️</span>Etsy<br>Order</div>
     <span class="flow-arrow">→</span>
-    <div class="flow-node"><span class="icon">🤖</span>GPT-4o Mini<br>E-posta Yazar</div>
+    <div class="flow-node"><span class="icon">🤖</span>GPT-4o Mini<br>Writes Email</div>
     <span class="flow-arrow">→</span>
-    <div class="flow-node"><span class="icon">📧</span>Gmail<br>Gönderir</div>
+    <div class="flow-node"><span class="icon">📧</span>Gmail<br>Sends</div>
     <span class="flow-arrow">→</span>
-    <div class="flow-node"><span class="icon">📊</span>Google Sheets<br>Kaydeder</div>
+    <div class="flow-node"><span class="icon">📊</span>Google Sheets<br>Logs</div>
   </div>
 
-  <h2>✅ Başlamadan Önce Kontrol Listesi</h2>
+  <h2>✅ Pre-Setup Checklist</h2>
   <ul class="checklist">
-    <li>Make.com veya Zapier hesabı açık</li>
-    <li>OpenAI API anahtarı hazır (platform.openai.com/api-keys)</li>
-    <li>Gmail hesabına erişiminiz var</li>
-    <li>Etsy Seller hesabınız aktif</li>
-    <li>Google Sheets'te "Siparişler" adlı bir sayfa oluşturdunuz</li>
+    <li>Make.com or Zapier account is open</li>
+    <li>OpenAI API key is ready (platform.openai.com/api-keys)</li>
+    <li>You have access to a Gmail account</li>
+    <li>Your Etsy Seller account is active</li>
+    <li>You've created a sheet named "Orders" in Google Sheets</li>
   </ul>
 
-  <h2>⚙️ Make.com Kurulumu</h2>
+  <h2>⚙️ Make.com Setup</h2>
 
   <div class="step">
     <div class="step-num">1</div>
     <div>
-      <h4>Şablonu Import Edin</h4>
-      <p>Make.com'da sol menüden <strong>Scenarios</strong>'a gidin → sağ üstteki <strong>···</strong> (üç nokta) menüsünden <strong>"Import Blueprint"</strong> seçin → <code>make_blueprints/01_etsy_siparis_tesekur_email.json</code> dosyasını yükleyin.</p>
+      <h4>Import the Template</h4>
+      <p>In Make.com, go to <strong>Scenarios</strong> in the left menu → open the <strong>···</strong> (three dots) menu in the top right → select <strong>"Import Blueprint"</strong> → upload the <code>make_blueprints/01_etsy_order_thankyou_email.json</code> file.</p>
     </div>
   </div>
 
   <div class="step">
     <div class="step-num">2</div>
     <div>
-      <h4>Webhook URL'ini Kopyalayın</h4>
-      <p>İlk modül (Webhook) üzerine tıklayın → <strong>"Copy address to clipboard"</strong> butonuna basın. Bu URL'i bir yere not edin, Etsy'de kullanacaksınız.</p>
+      <h4>Copy the Webhook URL</h4>
+      <p>Click on the first module (Webhook) → press the <strong>"Copy address to clipboard"</strong> button. Note this URL down somewhere — you'll use it in Etsy.</p>
     </div>
   </div>
 
   <div class="step">
     <div class="step-num">3</div>
     <div>
-      <h4>Etsy Webhook Ayarlayın</h4>
-      <p>Etsy Developer Portal → Applications → Webhook ekleyin → URL olarak kopyaladığınız Make.com adresini yapıştırın. Event: <code>RECEIPT_ACCEPTED</code> seçin.</p>
+      <h4>Set Up the Etsy Webhook</h4>
+      <p>Etsy Developer Portal → Applications → add a Webhook → paste the Make.com address you copied as the URL. Choose the event: <code>RECEIPT_ACCEPTED</code>.</p>
     </div>
   </div>
 
   <div class="step">
     <div class="step-num">4</div>
     <div>
-      <h4>OpenAI Bağlantısı Kurun</h4>
-      <p>3. modüle (OpenAI) tıklayın → <strong>"Add"</strong> butonuyla yeni bağlantı ekleyin → API anahtarınızı girin → <strong>"Save"</strong>.</p>
+      <h4>Set Up the OpenAI Connection</h4>
+      <p>Click on the 3rd module (OpenAI) → add a new connection with the <strong>"Add"</strong> button → enter your API key → <strong>"Save"</strong>.</p>
     </div>
   </div>
 
   <div class="step">
     <div class="step-num">5</div>
     <div>
-      <h4>Gmail Bağlantısı Kurun</h4>
-      <p>4. modüle (Gmail) tıklayın → Google hesabınızla OAuth ile giriş yapın. "From" alanına mağaza adınızı ve e-posta adresinizi girin.</p>
+      <h4>Set Up the Gmail Connection</h4>
+      <p>Click on the 4th module (Gmail) → sign in with your Google account via OAuth. Enter your store name and email address in the "From" field.</p>
     </div>
   </div>
 
   <div class="step">
     <div class="step-num">6</div>
     <div>
-      <h4>Google Sheets Ayarlayın</h4>
-      <p>5. modüle (Google Sheets) tıklayın → Spreadsheet ID'nizi girin. Sheets'inizde şu sütunları oluşturun: <code>Tarih | Sipariş No | Müşteri Adı | E-posta | Ürün | Tutar | E-posta Gönderildi</code></p>
+      <h4>Configure Google Sheets</h4>
+      <p>Click on the 5th module (Google Sheets) → enter your Spreadsheet ID. Create these columns in your sheet: <code>Date | Order No | Customer Name | Email | Product | Amount | Email Sent</code></p>
     </div>
   </div>
 
   <div class="step">
     <div class="step-num">7</div>
     <div>
-      <h4>Test Edin ve Aktif Edin</h4>
-      <p>Sağ alt köşedeki <strong>"Run once"</strong> butonuna basın → Etsy'den test siparişi gönderin → Her şey çalışıyorsa senaryoyu <strong>ON</strong> konumuna getirin.</p>
+      <h4>Test and Activate</h4>
+      <p>Press the <strong>"Run once"</strong> button in the bottom-right corner → send a test order from Etsy → if everything works, switch the scenario to <strong>ON</strong>.</p>
     </div>
   </div>
 
-  <h2>🔧 Özelleştirme Değişkenleri</h2>
+  <h2>🔧 Customization Variables</h2>
   <table class="var-table">
-    <thead><tr><th>Değişken</th><th>Ne Yapmanız Gerekiyor</th></tr></thead>
+    <thead><tr><th>Variable</th><th>What You Need to Do</th></tr></thead>
     <tbody>
-      <tr><td>GMAIL_ACCOUNT</td><td>Gmail OAuth ile bağlayın</td></tr>
-      <tr><td>SENDER_NAME</td><td>Mağaza adınızı yazın (örn: "Ayşe'nin Atölyesi")</td></tr>
-      <tr><td>SENDER_EMAIL</td><td>Gönderici e-posta adresinizi yazın</td></tr>
-      <tr><td>GOOGLE_SHEETS_ID</td><td>Sheets URL'sindeki /d/ ile /edit arasındaki uzun ID</td></tr>
+      <tr><td>GMAIL_ACCOUNT</td><td>Connect via Gmail OAuth</td></tr>
+      <tr><td>SENDER_NAME</td><td>Enter your store name (e.g., "Anna's Workshop")</td></tr>
+      <tr><td>SENDER_EMAIL</td><td>Enter your sender email address</td></tr>
+      <tr><td>GOOGLE_SHEETS_ID</td><td>The long ID between /d/ and /edit in the Sheets URL</td></tr>
     </tbody>
   </table>
 
   <div class="info-box green">
-    <strong>✅ Test İpucu</strong>
-    Make.com'da test için sağ alttaki "Run once" modunu kullanın. Etsy'den gerçek sipariş beklemeden webhook'u manuel olarak tetikleyebilirsiniz.
+    <strong>✅ Testing Tip</strong>
+    Use the "Run once" mode in the bottom right of Make.com to test. You can trigger the webhook manually without waiting for a real Etsy order.
   </div>
 
   <div class="info-box orange">
-    <strong>⚠️ OpenAI Maliyeti</strong>
-    GPT-4o Mini çok ucuz — her e-posta yaklaşık $0.001 (0.1 kuruş) tutar. 5$ ile 5.000+ e-posta gönderebilirsiniz.
+    <strong>⚠️ OpenAI Cost</strong>
+    GPT-4o Mini is very cheap — each email costs about $0.001 (a tenth of a cent). With $5 you can send 5,000+ emails.
   </div>
 
-  <h2>⚡ Zapier ile Kurulum</h2>
+  <h2>⚡ Setup with Zapier</h2>
   <div class="step">
     <div class="step-num">1</div>
-    <div><h4>Yeni Zap Oluşturun</h4><p>Zapier Dashboard → <strong>"Create Zap"</strong> → Trigger olarak <strong>Etsy → New Order</strong> seçin.</p></div>
+    <div><h4>Create a New Zap</h4><p>Zapier Dashboard → <strong>"Create Zap"</strong> → choose <strong>Etsy → New Order</strong> as the trigger.</p></div>
   </div>
   <div class="step">
     <div class="step-num">2</div>
-    <div><h4>OpenAI Adımını Ekleyin</h4><p>Action → <strong>OpenAI → Send Chat Message</strong>. <code>zapier_templates/01_etsy_siparis_tesekur_email.json</code> dosyasındaki mesaj şablonunu kopyalayın.</p></div>
+    <div><h4>Add the OpenAI Step</h4><p>Action → <strong>OpenAI → Send Chat Message</strong>. Copy the message template from the <code>zapier_templates/01_etsy_order_thankyou_email.json</code> file.</p></div>
   </div>
   <div class="step">
     <div class="step-num">3</div>
-    <div><h4>Gmail Adımını Ekleyin</h4><p>Action → <strong>Gmail → Send Email</strong>. To: Etsy'den gelen e-posta, Subject ve Body alanlarını JSON'daki gibi doldurun.</p></div>
+    <div><h4>Add the Gmail Step</h4><p>Action → <strong>Gmail → Send Email</strong>. To: the email from Etsy; fill in the Subject and Body fields as shown in the JSON.</p></div>
   </div>
   <div class="step">
     <div class="step-num">4</div>
-    <div><h4>Sheets Adımını Ekleyin (Opsiyonel)</h4><p>Action → <strong>Google Sheets → Create Row</strong>. JSON'daki config alanlarını kullanarak sütunları eşleştirin.</p></div>
+    <div><h4>Add the Sheets Step (Optional)</h4><p>Action → <strong>Google Sheets → Create Row</strong>. Map the columns using the config fields in the JSON.</p></div>
   </div>
 
   <div style="margin-top:60px;display:flex;gap:16px;">
-    <a href="baslangic_rehberi.html" style="background:rgba(108,71,255,0.15);border:1px solid rgba(108,71,255,0.3);color:var(--primary-light);padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:600;">← Başlangıç Rehberi</a>
-    <a href="02_sosyal_medya_kurulum.html" style="background:linear-gradient(135deg,#6C47FF,#8B6FFF);color:white;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:700;">Şablon 02: Sosyal Medya →</a>
+    <a href="getting-started.html" style="background:rgba(108,71,255,0.15);border:1px solid rgba(108,71,255,0.3);color:var(--primary-light);padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:600;">← Getting Started Guide</a>
+    <a href="02_social_media_setup.html" style="background:linear-gradient(135deg,#6C47FF,#8B6FFF);color:white;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:700;">Template 02: Social Media →</a>
   </div>
 </main>
 </body>

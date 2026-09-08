@@ -1,13 +1,13 @@
 {
-  "name": "Google Sheets → Sosyal Medya Otomatik Planlayıcı (Zapier)",
+  "name": "Google Sheets → Social Media Auto Planner (Zapier)",
   "trigger": {
     "app": "Google Sheets",
     "event": "New or Updated Spreadsheet Row",
     "config": {
       "spreadsheet": "{{SPREADSHEET_ID}}",
-      "worksheet": "İçerik Takvimi",
+      "worksheet": "Content Calendar",
       "trigger_column": "Status",
-      "trigger_value": "Hazır"
+      "trigger_value": "Ready"
     }
   },
   "actions": [
@@ -17,7 +17,7 @@
       "event": "Send Chat Message",
       "config": {
         "model": "gpt-4o-mini",
-        "user_message": "Şu konu için platforma özel sosyal medya içerikleri oluştur:\n\nKonu: {{1__Konu}}\nTon: {{1__Ton}}\nHedef Kitle: {{1__Hedef_Kitle}}\n\nJSON döndür: {instagram_caption, instagram_hashtags, twitter_tweet, linkedin_post}",
+        "user_message": "Create platform-specific social media content for the following topic:\n\nTopic: {{1__Topic}}\nTone: {{1__Tone}}\nTarget Audience: {{1__Target_Audience}}\n\nReturn JSON: {instagram_caption, instagram_hashtags, twitter_tweet, linkedin_post}",
         "max_tokens": 600
       }
     },
@@ -28,7 +28,7 @@
       "config": {
         "profile_ids": ["{{INSTAGRAM_ID}}", "{{TWITTER_ID}}"],
         "text": "{{extract_from_json(2__choices__0__message__content; 'instagram_caption')}} {{extract_from_json(2__choices__0__message__content; 'instagram_hashtags')}}",
-        "scheduled_at": "{{1__Yayin_Tarihi}}"
+        "scheduled_at": "{{1__Publish_Date}}"
       }
     },
     {
@@ -46,10 +46,10 @@
       "event": "Update Spreadsheet Row",
       "config": {
         "spreadsheet": "{{SPREADSHEET_ID}}",
-        "worksheet": "İçerik Takvimi",
+        "worksheet": "Content Calendar",
         "row": "{{1__row_number}}",
-        "Status": "✅ Planlandı",
-        "Tamamlanma": "{{zap_meta_humanized_time}}"
+        "Status": "✅ Scheduled",
+        "Completed": "{{zap_meta_humanized_time}}"
       }
     }
   ]

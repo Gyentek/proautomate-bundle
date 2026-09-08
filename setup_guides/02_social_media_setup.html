@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Template 02: Social Media Planner Setup</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    :root{--primary:#6C47FF;--primary-light:#8B6FFF;--accent:#00D4AA;--dark:#0A0A1A;--dark2:#111128;--card:#16163A;--text:#E8E8FF;--text-muted:#9090BB;--border:rgba(108,71,255,0.25)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);line-height:1.7}
+    .sidebar{position:fixed;left:0;top:0;bottom:0;width:260px;background:var(--dark2);border-right:1px solid var(--border);padding:32px 20px;overflow-y:auto;z-index:100}
+    .sidebar-logo{font-size:18px;font-weight:800;margin-bottom:32px}.sidebar-logo span{color:var(--primary-light)}
+    .nav-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin:20px 0 8px}
+    .nav-link{display:block;padding:8px 12px;border-radius:8px;font-size:14px;color:var(--text-muted);text-decoration:none;transition:all 0.2s;margin-bottom:2px}
+    .nav-link:hover,.nav-link.active{background:rgba(108,71,255,0.15);color:white}
+    .main{margin-left:260px;padding:60px 80px;max-width:900px}
+    h1{font-size:2.2rem;font-weight:800;margin-bottom:16px}
+    h2{font-size:1.4rem;font-weight:700;margin:48px 0 16px;color:white;border-bottom:1px solid var(--border);padding-bottom:12px}
+    h3{font-size:1rem;font-weight:700;margin:20px 0 8px;color:var(--primary-light)}
+    p{color:var(--text-muted);margin-bottom:12px}
+    .step{display:flex;gap:16px;margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+    .step-num{min-width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:white;flex-shrink:0}
+    .step h4{font-weight:700;color:white;margin-bottom:6px}.step p{font-size:14px;margin:0}
+    code{background:#0D0D20;border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-family:'Courier New',monospace;font-size:13px;color:#7EC8E3}
+    .info-box{background:rgba(108,71,255,0.1);border:1px solid rgba(108,71,255,0.3);border-radius:12px;padding:18px 22px;margin:20px 0}
+    .info-box.green{background:rgba(0,212,170,0.08);border-color:rgba(0,212,170,0.3)}
+    .info-box strong{display:block;margin-bottom:6px;color:white}
+    .sheets-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+    .sheets-table th{background:rgba(108,71,255,0.2);padding:10px 14px;text-align:left;color:var(--primary-light);font-weight:700}
+    .sheets-table td{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text-muted)}
+    .sheets-table td:first-child{color:#7EC8E3;font-family:'Courier New',monospace}
+    @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:30px 20px}}
+  </style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="sidebar-logo">Pro<span>Automate</span></div>
+  <div class="nav-label">Navigation</div>
+  <a href="getting-started.html" class="nav-link">← Getting Started Guide</a>
+  <div class="nav-label">Templates</div>
+  <a href="01_etsy_setup.html" class="nav-link">01 Etsy Email</a>
+  <a href="02_social_media_setup.html" class="nav-link active">02 Social Media</a>
+  <a href="03_woocommerce_setup.html" class="nav-link">03 WooCommerce</a>
+  <a href="04_content_generator_setup.html" class="nav-link">04 Content Generator</a>
+</nav>
+<main class="main">
+  <p style="color:var(--primary-light);font-size:13px;font-weight:700;margin-bottom:8px">TEMPLATE 02 · SETUP GUIDE</p>
+  <h1>📱 Social Media Auto Content Planner</h1>
+  <p style="font-size:1.05rem;color:var(--text)">Reads your content calendar in Google Sheets, generates platform-specific content with ChatGPT, and schedules posts to Instagram, Twitter/X, and LinkedIn via Buffer.</p>
+
+  <h2>📊 Prepare Your Google Sheets Template</h2>
+  <p>Create a sheet named "Content Calendar" in your spreadsheet and add the following columns:</p>
+  <table class="sheets-table">
+    <thead><tr><th>Column Name</th><th>Description</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>Topic</td><td>Content topic</td><td>Minimalist home decor trends</td></tr>
+      <tr><td>Target_Audience</td><td>Define your audience</td><td>Ages 25-40, home decor enthusiasts</td></tr>
+      <tr><td>Tone</td><td>Communication tone</td><td>Friendly, inspiring</td></tr>
+      <tr><td>Hashtag_Count</td><td>How many hashtags</td><td>15</td></tr>
+      <tr><td>Publish_Date</td><td>ISO format date</td><td>2024-12-25T10:00:00</td></tr>
+      <tr><td>Status</td><td>Status (do not change)</td><td>Ready</td></tr>
+      <tr><td>Scheduled_Date</td><td>Filled automatically</td><td>(leave blank)</td></tr>
+      <tr><td>Buffer_ID</td><td>Filled automatically</td><td>(leave blank)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-box green">
+    <strong>💡 Tip: The Status Column</strong>
+    Set the Status column to "Ready" for the rows you want processed. The system picks up these rows, processes them, and updates them to "✅ Scheduled".
+  </div>
+
+  <h2>⚙️ Make.com Setup</h2>
+  <div class="step"><div class="step-num">1</div><div><h4>Import the Blueprint</h4><p>Make.com → Scenarios → Import Blueprint → upload the <code>make_blueprints/02_social_media_planner.json</code> file.</p></div></div>
+  <div class="step"><div class="step-num">2</div><div><h4>Connect Google Sheets</h4><p>1st module (Google Sheets) → connect with your Google account → enter your Spreadsheet ID → Sheet name: "Content Calendar".</p></div></div>
+  <div class="step"><div class="step-num">3</div><div><h4>Connect OpenAI</h4><p>2nd module (OpenAI) → enter your API key. Model: gpt-4o-mini (cheap and fast).</p></div></div>
+  <div class="step"><div class="step-num">4</div><div><h4>Connect Buffer</h4><p>Create a free account at Buffer.com → connect the Buffer module in Make.com via OAuth → select your Instagram, Twitter, and LinkedIn profiles.</p></div></div>
+  <div class="step"><div class="step-num">5</div><div><h4>Connect Slack (Optional)</h4><p>Last module (Slack) → connect your Slack workspace → Channel: <code>#social-media</code> or any channel you prefer.</p></div></div>
+  <div class="step"><div class="step-num">6</div><div><h4>Set the Schedule</h4><p>Scenario Settings → Scheduling → set it to run every day at 8:00 AM.</p></div></div>
+
+  <div style="margin-top:60px;display:flex;gap:16px">
+    <a href="01_etsy_setup.html" style="background:rgba(108,71,255,0.15);border:1px solid rgba(108,71,255,0.3);color:var(--primary-light);padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:600">← Template 01</a>
+    <a href="03_woocommerce_setup.html" style="background:linear-gradient(135deg,#6C47FF,#8B6FFF);color:white;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:700">Template 03: WooCommerce →</a>
+  </div>
+</main>
+</body>
+</html>

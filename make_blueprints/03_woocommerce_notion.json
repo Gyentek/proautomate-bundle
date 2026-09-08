@@ -1,6 +1,6 @@
 {
-  "name": "WooCommerce Sipariş → Notion CRM",
-  "description": "WooCommerce'den gelen her yeni siparişi otomatik olarak Notion veritabanına ekler, müşteri kaydı oluşturur ve ekibe bildirim gönderir.",
+  "name": "WooCommerce Order → Notion CRM",
+  "description": "Automatically adds every new WooCommerce order to a Notion database, creates a customer record, and notifies your team.",
   "version": 2,
   "metadata": {
     "instant": true,
@@ -54,18 +54,18 @@
       },
       "mapper": {
         "properties": {
-          "Sipariş No": { "title": [{ "text": { "content": "#{{1.number}}" } }] },
-          "Müşteri": { "rich_text": [{ "text": { "content": "{{1.billing.first_name}} {{1.billing.last_name}}" } }] },
-          "E-posta": { "email": "{{1.billing.email}}" },
-          "Telefon": { "phone_number": "{{1.billing.phone}}" },
-          "Tutar": { "number": "{{toNumber(1.total)}}" },
-          "Para Birimi": { "select": { "name": "{{1.currency}}" } },
-          "Durum": { "select": { "name": "Yeni Sipariş" } },
-          "Ürünler": { "rich_text": [{ "text": { "content": "{{join(map(1.line_items; 'name'); ', ')}}" } }] },
-          "Sipariş Tarihi": { "date": { "start": "{{1.date_created}}" } },
-          "Ülke": { "select": { "name": "{{1.billing.country}}" } },
-          "Ödeme Yöntemi": { "select": { "name": "{{1.payment_method_title}}" } },
-          "WC Linki": { "url": "{{WOOCOMMERCE_SITE_URL}}/wp-admin/post.php?post={{1.id}}&action=edit" }
+          "Order No": { "title": [{ "text": { "content": "#{{1.number}}" } }] },
+          "Customer": { "rich_text": [{ "text": { "content": "{{1.billing.first_name}} {{1.billing.last_name}}" } }] },
+          "Email": { "email": "{{1.billing.email}}" },
+          "Phone": { "phone_number": "{{1.billing.phone}}" },
+          "Amount": { "number": "{{toNumber(1.total)}}" },
+          "Currency": { "select": { "name": "{{1.currency}}" } },
+          "Status": { "select": { "name": "New Order" } },
+          "Products": { "rich_text": [{ "text": { "content": "{{join(map(1.line_items; 'name'); ', ')}}" } }] },
+          "Order Date": { "date": { "start": "{{1.date_created}}" } },
+          "Country": { "select": { "name": "{{1.billing.country}}" } },
+          "Payment Method": { "select": { "name": "{{1.payment_method_title}}" } },
+          "WC Link": { "url": "{{WOOCOMMERCE_SITE_URL}}/wp-admin/post.php?post={{1.id}}&action=edit" }
         }
       },
       "metadata": {
@@ -81,7 +81,7 @@
         "messages": [
           {
             "role": "user",
-            "content": "Şu WooCommerce siparişi için kısa bir müşteri değerlendirme notu yaz (3-4 cümle, Türkçe):\n- Müşteri: {{1.billing.first_name}} {{1.billing.last_name}}\n- Tutar: {{1.total}} {{1.currency}}\n- Ürünler: {{join(map(1.line_items; 'name'); ', ')}}\n- Ülke: {{1.billing.country}}\n- Ödeme: {{1.payment_method_title}}\n\nMüşteri segmenti, sipariş değeri ve potansiyel notlar ekle."
+            "content": "Write a short customer assessment note for the following WooCommerce order (3-4 sentences, in English):\n- Customer: {{1.billing.first_name}} {{1.billing.last_name}}\n- Amount: {{1.total}} {{1.currency}}\n- Products: {{join(map(1.line_items; 'name'); ', ')}}\n- Country: {{1.billing.country}}\n- Payment: {{1.payment_method_title}}\n\nInclude the customer segment, order value, and potential notes."
           }
         ],
         "max_tokens": 200
@@ -103,20 +103,20 @@
         "blocks": [
           {
             "type": "header",
-            "text": { "type": "plain_text", "text": "🛒 Yeni Sipariş #{{1.number}}" }
+            "text": { "type": "plain_text", "text": "🛒 New Order #{{1.number}}" }
           },
           {
             "type": "section",
             "fields": [
-              { "type": "mrkdwn", "text": "*Müşteri:*\n{{1.billing.first_name}} {{1.billing.last_name}}" },
-              { "type": "mrkdwn", "text": "*Tutar:*\n{{1.total}} {{1.currency}}" },
-              { "type": "mrkdwn", "text": "*Ürünler:*\n{{join(map(1.line_items; 'name'); ', ')}}" },
-              { "type": "mrkdwn", "text": "*Durum:*\n✅ Notion'a Eklendi" }
+              { "type": "mrkdwn", "text": "*Customer:*\n{{1.billing.first_name}} {{1.billing.last_name}}" },
+              { "type": "mrkdwn", "text": "*Amount:*\n{{1.total}} {{1.currency}}" },
+              { "type": "mrkdwn", "text": "*Products:*\n{{join(map(1.line_items; 'name'); ', ')}}" },
+              { "type": "mrkdwn", "text": "*Status:*\n✅ Added to Notion" }
             ]
           },
           {
             "type": "section",
-            "text": { "type": "mrkdwn", "text": "*AI Notu:* {{4.choices[].message.content}}" }
+            "text": { "type": "mrkdwn", "text": "*AI Note:* {{4.choices[].message.content}}" }
           }
         ]
       },
@@ -126,20 +126,20 @@
     }
   ],
   "_SETUP_NOTES": {
-    "gerekli_hesaplar": ["WooCommerce (API anahtarı)", "Notion (entegrasyon)", "OpenAI API", "Slack"],
-    "notion_veritabanlari": {
-      "Siparişler": ["Sipariş No", "Müşteri", "E-posta", "Telefon", "Tutar", "Para Birimi", "Durum", "Ürünler", "Sipariş Tarihi", "Ülke", "Ödeme Yöntemi", "WC Linki"],
-      "Müşteriler": ["Ad Soyad", "E-posta", "Toplam Harcama", "Sipariş Sayısı", "Son Sipariş"]
+    "required_accounts": ["WooCommerce (API key)", "Notion (integration)", "OpenAI API", "Slack"],
+    "notion_databases": {
+      "Orders": ["Order No", "Customer", "Email", "Phone", "Amount", "Currency", "Status", "Products", "Order Date", "Country", "Payment Method", "WC Link"],
+      "Customers": ["Full Name", "Email", "Total Spend", "Order Count", "Last Order"]
     },
-    "degistirmeniz_gerekenler": {
-      "WOOCOMMERCE_SITE_URL": "https://siteniz.com",
-      "WC_CONSUMER_KEY": "WooCommerce API > Tüketici Anahtarı",
-      "WC_CONSUMER_SECRET": "WooCommerce API > Tüketici Gizli Anahtarı",
-      "NOTION_ACCOUNT": "Notion OAuth bağlantısı",
-      "NOTION_ORDERS_DB_ID": "Siparişler veritabanı URL'sindeki 32 haneli ID",
-      "NOTION_CUSTOMERS_DB_ID": "Müşteriler veritabanı ID'si",
+    "what_to_change": {
+      "WOOCOMMERCE_SITE_URL": "https://yoursite.com",
+      "WC_CONSUMER_KEY": "WooCommerce API > Consumer Key",
+      "WC_CONSUMER_SECRET": "WooCommerce API > Consumer Secret",
+      "NOTION_ACCOUNT": "Notion OAuth connection",
+      "NOTION_ORDERS_DB_ID": "The 32-character ID in the Orders database URL",
+      "NOTION_CUSTOMERS_DB_ID": "Customers database ID",
       "SLACK_ACCOUNT": "Slack OAuth",
-      "SLACK_ORDERS_CHANNEL": "#siparisler"
+      "SLACK_ORDERS_CHANNEL": "#orders"
     }
   }
 }
