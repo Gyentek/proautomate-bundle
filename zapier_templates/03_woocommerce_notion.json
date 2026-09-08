@@ -1,0 +1,38 @@
+{
+  "name": "WooCommerce → Notion CRM (Zapier)",
+  "trigger": {
+    "app": "WooCommerce",
+    "event": "New Order",
+    "config": {
+      "site_url": "{{WC_SITE_URL}}",
+      "consumer_key": "{{WC_KEY}}",
+      "consumer_secret": "{{WC_SECRET}}"
+    }
+  },
+  "actions": [
+    {
+      "step": 1,
+      "app": "Notion",
+      "event": "Create Database Item",
+      "config": {
+        "database": "{{NOTION_ORDERS_DB}}",
+        "Sipariş No": "#{{1__number}}",
+        "Müşteri": "{{1__billing_first_name}} {{1__billing_last_name}}",
+        "E-posta": "{{1__billing_email}}",
+        "Tutar": "{{1__total}} {{1__currency}}",
+        "Ürünler": "{{1__line_items__0__name}}",
+        "Durum": "Yeni Sipariş",
+        "Tarih": "{{1__date_created}}"
+      }
+    },
+    {
+      "step": 2,
+      "app": "Slack",
+      "event": "Send Channel Message",
+      "config": {
+        "channel": "{{SLACK_CHANNEL}}",
+        "message": "🛒 *Yeni WooCommerce Siparişi!*\n👤 Müşteri: {{1__billing_first_name}} {{1__billing_last_name}}\n💰 Tutar: {{1__total}} {{1__currency}}\n📦 Ürün: {{1__line_items__0__name}}\n✅ Notion'a eklendi!"
+      }
+    }
+  ]
+}

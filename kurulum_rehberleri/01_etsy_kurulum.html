@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Şablon 01: Etsy E-posta Kurulum Rehberi</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    :root { --primary:#6C47FF; --primary-light:#8B6FFF; --accent:#00D4AA; --dark:#0A0A1A; --dark2:#111128; --card:#16163A; --text:#E8E8FF; --text-muted:#9090BB; --border:rgba(108,71,255,0.25); }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:var(--dark); color:var(--text); line-height:1.7; }
+    .sidebar { position:fixed; left:0; top:0; bottom:0; width:260px; background:var(--dark2); border-right:1px solid var(--border); padding:32px 20px; overflow-y:auto; z-index:100; }
+    .sidebar-logo { font-size:18px; font-weight:800; margin-bottom:32px; }
+    .sidebar-logo span { color:var(--primary-light); }
+    .nav-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin:20px 0 8px; }
+    .nav-link { display:block; padding:8px 12px; border-radius:8px; font-size:14px; color:var(--text-muted); text-decoration:none; transition:all 0.2s; margin-bottom:2px; }
+    .nav-link:hover, .nav-link.active { background:rgba(108,71,255,0.15); color:white; }
+    .nav-link .num { font-size:11px; opacity:0.6; margin-right:6px; }
+    .main { margin-left:260px; padding:60px 80px; max-width:900px; }
+    h1 { font-size:2.2rem; font-weight:800; margin-bottom:16px; }
+    h2 { font-size:1.4rem; font-weight:700; margin:48px 0 16px; color:white; border-bottom:1px solid var(--border); padding-bottom:12px; }
+    h3 { font-size:1rem; font-weight:700; margin:24px 0 8px; color:var(--primary-light); }
+    p { color:var(--text-muted); margin-bottom:12px; }
+    .info-box { background:rgba(108,71,255,0.1); border:1px solid rgba(108,71,255,0.3); border-radius:12px; padding:18px 22px; margin:20px 0; }
+    .info-box.green { background:rgba(0,212,170,0.08); border-color:rgba(0,212,170,0.3); }
+    .info-box.orange { background:rgba(255,107,53,0.08); border-color:rgba(255,107,53,0.3); }
+    .info-box strong { display:block; margin-bottom:6px; color:white; }
+    code { background:#0D0D20; border:1px solid var(--border); border-radius:5px; padding:2px 8px; font-family:'Courier New',monospace; font-size:13px; color:#7EC8E3; }
+    .step { display:flex; gap:16px; margin-bottom:20px; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px; }
+    .step-num { min-width:36px; height:36px; background:linear-gradient(135deg,var(--primary),var(--primary-light)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:white; flex-shrink:0; }
+    .step h4 { font-weight:700; color:white; margin-bottom:6px; }
+    .step p { font-size:14px; margin:0; }
+    .flow-diagram { display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:20px; background:var(--card); border-radius:14px; border:1px solid var(--border); margin:20px 0; }
+    .flow-node { background:rgba(108,71,255,0.2); border:1px solid rgba(108,71,255,0.4); border-radius:10px; padding:10px 16px; font-size:13px; font-weight:600; text-align:center; }
+    .flow-node .icon { font-size:20px; display:block; margin-bottom:4px; }
+    .flow-arrow { color:var(--primary-light); font-size:20px; }
+    .checklist { list-style:none; }
+    .checklist li { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.05); color:var(--text-muted); font-size:14px; }
+    .checklist li::before { content:'☐ '; color:var(--primary-light); font-size:16px; }
+    .var-table { width:100%; border-collapse:collapse; margin:16px 0; }
+    .var-table th { background:rgba(108,71,255,0.2); padding:10px 14px; text-align:left; font-size:12px; font-weight:700; color:var(--primary-light); }
+    .var-table td { padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; }
+    .var-table td:first-child { color:#7EC8E3; font-family:'Courier New',monospace; font-size:12px; }
+    @media(max-width:768px){ .sidebar{display:none} .main{margin-left:0;padding:30px 20px} }
+  </style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="sidebar-logo">Pro<span>Automate</span></div>
+  <div class="nav-label">Navigasyon</div>
+  <a href="baslangic_rehberi.html" class="nav-link">← Başlangıç Rehberi</a>
+  <div class="nav-label">Şablonlar</div>
+  <a href="01_etsy_kurulum.html" class="nav-link active"><span class="num">01</span> Etsy E-posta</a>
+  <a href="02_sosyal_medya_kurulum.html" class="nav-link"><span class="num">02</span> Sosyal Medya</a>
+  <a href="03_woocommerce_kurulum.html" class="nav-link"><span class="num">03</span> WooCommerce</a>
+  <a href="04_icerik_uretici_kurulum.html" class="nav-link"><span class="num">04</span> İçerik Üretici</a>
+</nav>
+<main class="main">
+  <p style="color:var(--primary-light);font-size:13px;font-weight:700;margin-bottom:8px;">ŞABLON 01 · KURULUM REHBERİ</p>
+  <h1>📧 Etsy Sipariş →<br>Teşekkür E-postası</h1>
+  <p style="font-size:1.05rem;color:var(--text);">Etsy'den yeni sipariş geldiğinde ChatGPT otomatik olarak müşteriye özel bir teşekkür e-postası yazar ve Gmail'den gönderir.</p>
+
+  <div class="flow-diagram">
+    <div class="flow-node"><span class="icon">🛍️</span>Etsy<br>Siparişi</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node"><span class="icon">🤖</span>GPT-4o Mini<br>E-posta Yazar</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node"><span class="icon">📧</span>Gmail<br>Gönderir</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node"><span class="icon">📊</span>Google Sheets<br>Kaydeder</div>
+  </div>
+
+  <h2>✅ Başlamadan Önce Kontrol Listesi</h2>
+  <ul class="checklist">
+    <li>Make.com veya Zapier hesabı açık</li>
+    <li>OpenAI API anahtarı hazır (platform.openai.com/api-keys)</li>
+    <li>Gmail hesabına erişiminiz var</li>
+    <li>Etsy Seller hesabınız aktif</li>
+    <li>Google Sheets'te "Siparişler" adlı bir sayfa oluşturdunuz</li>
+  </ul>
+
+  <h2>⚙️ Make.com Kurulumu</h2>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div>
+      <h4>Şablonu Import Edin</h4>
+      <p>Make.com'da sol menüden <strong>Scenarios</strong>'a gidin → sağ üstteki <strong>···</strong> (üç nokta) menüsünden <strong>"Import Blueprint"</strong> seçin → <code>make_blueprints/01_etsy_siparis_tesekur_email.json</code> dosyasını yükleyin.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div>
+      <h4>Webhook URL'ini Kopyalayın</h4>
+      <p>İlk modül (Webhook) üzerine tıklayın → <strong>"Copy address to clipboard"</strong> butonuna basın. Bu URL'i bir yere not edin, Etsy'de kullanacaksınız.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div>
+      <h4>Etsy Webhook Ayarlayın</h4>
+      <p>Etsy Developer Portal → Applications → Webhook ekleyin → URL olarak kopyaladığınız Make.com adresini yapıştırın. Event: <code>RECEIPT_ACCEPTED</code> seçin.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div>
+      <h4>OpenAI Bağlantısı Kurun</h4>
+      <p>3. modüle (OpenAI) tıklayın → <strong>"Add"</strong> butonuyla yeni bağlantı ekleyin → API anahtarınızı girin → <strong>"Save"</strong>.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div>
+      <h4>Gmail Bağlantısı Kurun</h4>
+      <p>4. modüle (Gmail) tıklayın → Google hesabınızla OAuth ile giriş yapın. "From" alanına mağaza adınızı ve e-posta adresinizi girin.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div>
+      <h4>Google Sheets Ayarlayın</h4>
+      <p>5. modüle (Google Sheets) tıklayın → Spreadsheet ID'nizi girin. Sheets'inizde şu sütunları oluşturun: <code>Tarih | Sipariş No | Müşteri Adı | E-posta | Ürün | Tutar | E-posta Gönderildi</code></p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">7</div>
+    <div>
+      <h4>Test Edin ve Aktif Edin</h4>
+      <p>Sağ alt köşedeki <strong>"Run once"</strong> butonuna basın → Etsy'den test siparişi gönderin → Her şey çalışıyorsa senaryoyu <strong>ON</strong> konumuna getirin.</p>
+    </div>
+  </div>
+
+  <h2>🔧 Özelleştirme Değişkenleri</h2>
+  <table class="var-table">
+    <thead><tr><th>Değişken</th><th>Ne Yapmanız Gerekiyor</th></tr></thead>
+    <tbody>
+      <tr><td>GMAIL_ACCOUNT</td><td>Gmail OAuth ile bağlayın</td></tr>
+      <tr><td>SENDER_NAME</td><td>Mağaza adınızı yazın (örn: "Ayşe'nin Atölyesi")</td></tr>
+      <tr><td>SENDER_EMAIL</td><td>Gönderici e-posta adresinizi yazın</td></tr>
+      <tr><td>GOOGLE_SHEETS_ID</td><td>Sheets URL'sindeki /d/ ile /edit arasındaki uzun ID</td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-box green">
+    <strong>✅ Test İpucu</strong>
+    Make.com'da test için sağ alttaki "Run once" modunu kullanın. Etsy'den gerçek sipariş beklemeden webhook'u manuel olarak tetikleyebilirsiniz.
+  </div>
+
+  <div class="info-box orange">
+    <strong>⚠️ OpenAI Maliyeti</strong>
+    GPT-4o Mini çok ucuz — her e-posta yaklaşık $0.001 (0.1 kuruş) tutar. 5$ ile 5.000+ e-posta gönderebilirsiniz.
+  </div>
+
+  <h2>⚡ Zapier ile Kurulum</h2>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div><h4>Yeni Zap Oluşturun</h4><p>Zapier Dashboard → <strong>"Create Zap"</strong> → Trigger olarak <strong>Etsy → New Order</strong> seçin.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div><h4>OpenAI Adımını Ekleyin</h4><p>Action → <strong>OpenAI → Send Chat Message</strong>. <code>zapier_templates/01_etsy_siparis_tesekur_email.json</code> dosyasındaki mesaj şablonunu kopyalayın.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div><h4>Gmail Adımını Ekleyin</h4><p>Action → <strong>Gmail → Send Email</strong>. To: Etsy'den gelen e-posta, Subject ve Body alanlarını JSON'daki gibi doldurun.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div><h4>Sheets Adımını Ekleyin (Opsiyonel)</h4><p>Action → <strong>Google Sheets → Create Row</strong>. JSON'daki config alanlarını kullanarak sütunları eşleştirin.</p></div>
+  </div>
+
+  <div style="margin-top:60px;display:flex;gap:16px;">
+    <a href="baslangic_rehberi.html" style="background:rgba(108,71,255,0.15);border:1px solid rgba(108,71,255,0.3);color:var(--primary-light);padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:600;">← Başlangıç Rehberi</a>
+    <a href="02_sosyal_medya_kurulum.html" style="background:linear-gradient(135deg,#6C47FF,#8B6FFF);color:white;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:700;">Şablon 02: Sosyal Medya →</a>
+  </div>
+</main>
+</body>
+</html>

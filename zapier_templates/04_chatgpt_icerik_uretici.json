@@ -1,0 +1,71 @@
+{
+  "name": "ChatGPT İçerik Üretici + WordPress (Zapier)",
+  "trigger": {
+    "app": "Schedule by Zapier",
+    "event": "Every Day",
+    "config": {
+      "time": "06:00 AM"
+    }
+  },
+  "actions": [
+    {
+      "step": 1,
+      "app": "Google Sheets",
+      "event": "Lookup Spreadsheet Row",
+      "config": {
+        "spreadsheet": "{{SPREADSHEET_ID}}",
+        "worksheet": "İçerik Kuyruğu",
+        "lookup_column": "Durum",
+        "lookup_value": "Üretilecek"
+      }
+    },
+    {
+      "step": 2,
+      "app": "OpenAI (GPT-4, DALL-E, Whisper)",
+      "event": "Send Chat Message",
+      "config": {
+        "model": "gpt-4o",
+        "user_message": "Konu: {{1__Konu}}\nAnahtar Kelimeler: {{1__Anahtar_Kelimeler}}\nDil: {{1__Dil}}\n\nBu konu için:\n1. SEO optimizeli blog başlığı\n2. Meta açıklama (max 160 karakter)\n3. 800+ kelime HTML blog içeriği\n4. Instagram caption + hashtags\n5. Twitter tweeti (280 karakter)\n6. LinkedIn postu\n\nHepsini JSON formatında ver.",
+        "max_tokens": 3000,
+        "system_message": "Sen bir içerik stratejisti ve SEO uzmanısın."
+      }
+    },
+    {
+      "step": 3,
+      "app": "WordPress",
+      "event": "Create Post",
+      "config": {
+        "site": "{{WP_SITE}}",
+        "title": "{{extract_json(2__choices__0__message__content; 'baslik')}}",
+        "content": "{{extract_json(2__choices__0__message__content; 'icerik')}}",
+        "status": "draft",
+        "excerpt": "{{extract_json(2__choices__0__message__content; 'meta_aciklama')}}"
+      }
+    },
+    {
+      "step": 4,
+      "app": "Notion",
+      "event": "Create Database Item",
+      "config": {
+        "database": "{{NOTION_CONTENT_DB}}",
+        "Başlık": "{{extract_json(2__choices__0__message__content; 'baslik')}}",
+        "Konu": "{{1__Konu}}",
+        "Durum": "Taslak",
+        "WP_Linki": "{{3__link}}",
+        "Tarih": "{{zap_meta_humanized_time}}"
+      }
+    },
+    {
+      "step": 5,
+      "app": "Google Sheets",
+      "event": "Update Spreadsheet Row",
+      "config": {
+        "spreadsheet": "{{SPREADSHEET_ID}}",
+        "worksheet": "İçerik Kuyruğu",
+        "row": "{{1__row_number}}",
+        "Durum": "✅ Üretildi",
+        "Blog_Linki": "{{3__link}}"
+      }
+    }
+  ]
+}

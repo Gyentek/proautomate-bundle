@@ -1,0 +1,145 @@
+{
+  "name": "WooCommerce Sipariş → Notion CRM",
+  "description": "WooCommerce'den gelen her yeni siparişi otomatik olarak Notion veritabanına ekler, müşteri kaydı oluşturur ve ekibe bildirim gönderir.",
+  "version": 2,
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "sequential": false
+    }
+  },
+  "flow": [
+    {
+      "id": 1,
+      "module": "woocommerce:TriggerNewOrder",
+      "version": 1,
+      "parameters": {
+        "site": "{{WOOCOMMERCE_SITE_URL}}",
+        "consumer_key": "{{WC_CONSUMER_KEY}}",
+        "consumer_secret": "{{WC_CONSUMER_SECRET}}"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 0, "y": 0 }
+      }
+    },
+    {
+      "id": 2,
+      "module": "notion:searchObjects",
+      "version": 1,
+      "parameters": {
+        "account": "{{NOTION_ACCOUNT}}",
+        "type": "database",
+        "database": "{{NOTION_CUSTOMERS_DB_ID}}",
+        "filterType": "database"
+      },
+      "mapper": {
+        "query": "{{1.billing.email}}"
+      },
+      "metadata": {
+        "designer": { "x": 300, "y": 0 }
+      }
+    },
+    {
+      "id": 3,
+      "module": "notion:createRecord",
+      "version": 1,
+      "parameters": {
+        "account": "{{NOTION_ACCOUNT}}",
+        "database": "{{NOTION_ORDERS_DB_ID}}"
+      },
+      "mapper": {
+        "properties": {
+          "Sipariş No": { "title": [{ "text": { "content": "#{{1.number}}" } }] },
+          "Müşteri": { "rich_text": [{ "text": { "content": "{{1.billing.first_name}} {{1.billing.last_name}}" } }] },
+          "E-posta": { "email": "{{1.billing.email}}" },
+          "Telefon": { "phone_number": "{{1.billing.phone}}" },
+          "Tutar": { "number": "{{toNumber(1.total)}}" },
+          "Para Birimi": { "select": { "name": "{{1.currency}}" } },
+          "Durum": { "select": { "name": "Yeni Sipariş" } },
+          "Ürünler": { "rich_text": [{ "text": { "content": "{{join(map(1.line_items; 'name'); ', ')}}" } }] },
+          "Sipariş Tarihi": { "date": { "start": "{{1.date_created}}" } },
+          "Ülke": { "select": { "name": "{{1.billing.country}}" } },
+          "Ödeme Yöntemi": { "select": { "name": "{{1.payment_method_title}}" } },
+          "WC Linki": { "url": "{{WOOCOMMERCE_SITE_URL}}/wp-admin/post.php?post={{1.id}}&action=edit" }
+        }
+      },
+      "metadata": {
+        "designer": { "x": 600, "y": 0 }
+      }
+    },
+    {
+      "id": 4,
+      "module": "openai-gpt-4:createChatCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Şu WooCommerce siparişi için kısa bir müşteri değerlendirme notu yaz (3-4 cümle, Türkçe):\n- Müşteri: {{1.billing.first_name}} {{1.billing.last_name}}\n- Tutar: {{1.total}} {{1.currency}}\n- Ürünler: {{join(map(1.line_items; 'name'); ', ')}}\n- Ülke: {{1.billing.country}}\n- Ödeme: {{1.payment_method_title}}\n\nMüşteri segmenti, sipariş değeri ve potansiyel notlar ekle."
+          }
+        ],
+        "max_tokens": 200
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 900, "y": 0 }
+      }
+    },
+    {
+      "id": 5,
+      "module": "slack:postMessage",
+      "version": 1,
+      "parameters": {
+        "account": "{{SLACK_ACCOUNT}}"
+      },
+      "mapper": {
+        "channel": "{{SLACK_ORDERS_CHANNEL}}",
+        "blocks": [
+          {
+            "type": "header",
+            "text": { "type": "plain_text", "text": "🛒 Yeni Sipariş #{{1.number}}" }
+          },
+          {
+            "type": "section",
+            "fields": [
+              { "type": "mrkdwn", "text": "*Müşteri:*\n{{1.billing.first_name}} {{1.billing.last_name}}" },
+              { "type": "mrkdwn", "text": "*Tutar:*\n{{1.total}} {{1.currency}}" },
+              { "type": "mrkdwn", "text": "*Ürünler:*\n{{join(map(1.line_items; 'name'); ', ')}}" },
+              { "type": "mrkdwn", "text": "*Durum:*\n✅ Notion'a Eklendi" }
+            ]
+          },
+          {
+            "type": "section",
+            "text": { "type": "mrkdwn", "text": "*AI Notu:* {{4.choices[].message.content}}" }
+          }
+        ]
+      },
+      "metadata": {
+        "designer": { "x": 1200, "y": 0 }
+      }
+    }
+  ],
+  "_SETUP_NOTES": {
+    "gerekli_hesaplar": ["WooCommerce (API anahtarı)", "Notion (entegrasyon)", "OpenAI API", "Slack"],
+    "notion_veritabanlari": {
+      "Siparişler": ["Sipariş No", "Müşteri", "E-posta", "Telefon", "Tutar", "Para Birimi", "Durum", "Ürünler", "Sipariş Tarihi", "Ülke", "Ödeme Yöntemi", "WC Linki"],
+      "Müşteriler": ["Ad Soyad", "E-posta", "Toplam Harcama", "Sipariş Sayısı", "Son Sipariş"]
+    },
+    "degistirmeniz_gerekenler": {
+      "WOOCOMMERCE_SITE_URL": "https://siteniz.com",
+      "WC_CONSUMER_KEY": "WooCommerce API > Tüketici Anahtarı",
+      "WC_CONSUMER_SECRET": "WooCommerce API > Tüketici Gizli Anahtarı",
+      "NOTION_ACCOUNT": "Notion OAuth bağlantısı",
+      "NOTION_ORDERS_DB_ID": "Siparişler veritabanı URL'sindeki 32 haneli ID",
+      "NOTION_CUSTOMERS_DB_ID": "Müşteriler veritabanı ID'si",
+      "SLACK_ACCOUNT": "Slack OAuth",
+      "SLACK_ORDERS_CHANNEL": "#siparisler"
+    }
+  }
+}

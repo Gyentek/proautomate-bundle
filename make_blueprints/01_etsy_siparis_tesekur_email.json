@@ -1,0 +1,153 @@
+{
+  "name": "Etsy Sipariş → Otomatik Teşekkür E-postası",
+  "description": "Yeni Etsy siparişi geldiğinde müşteriye otomatik, kişiselleştirilmiş teşekkür e-postası gönderir.",
+  "version": 2,
+  "metadata": {
+    "instant": false,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false
+    },
+    "designer": {
+      "orphans": []
+    }
+  },
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": "{{ETSY_WEBHOOK_URL}}",
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 0, "y": 0 },
+        "restore": {
+          "parameters": {
+            "hook": { "label": "Etsy Sipariş Webhook" }
+          }
+        },
+        "parameters": [
+          { "name": "hook", "type": "hook:gateway-webhook", "label": "Webhook", "required": true }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "module": "util:SetVariable",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "name": "musteri_adi",
+        "scope": "roundtrip",
+        "value": "{{1.buyer_name}}"
+      },
+      "metadata": {
+        "designer": { "x": 300, "y": 0 },
+        "restore": {}
+      }
+    },
+    {
+      "id": 3,
+      "module": "openai-gpt-4:createChatCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Sen bir e-ticaret mağazasının müşteri hizmetleri asistanısın. Sıcak, samimi ve profesyonel e-postalar yazıyorsun. E-postalar kısa, özlü ve müşterinin değerini hissettiren nitelikte olmalı."
+          },
+          {
+            "role": "user",
+            "content": "Şu bilgilerle kişiselleştirilmiş bir teşekkür e-postası yaz:\n- Müşteri Adı: {{1.buyer_name}}\n- Sipariş Numarası: {{1.order_id}}\n- Ürün Adı: {{1.product_title}}\n- Sipariş Tarihi: {{1.order_date}}\n\nE-postayı Türkçe ve İngilizce olarak yaz. HTML formatında döndür."
+          }
+        ],
+        "max_tokens": 600
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 600, "y": 0 },
+        "restore": {
+          "parameters": {
+            "model": { "label": "GPT-4o Mini" }
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "gmail:sendEmail",
+      "version": 1,
+      "parameters": {
+        "account": "{{GMAIL_ACCOUNT}}"
+      },
+      "mapper": {
+        "to": "{{1.buyer_email}}",
+        "subject": "🎉 Siparişiniz Alındı! #{{1.order_id}} - Teşekkürler / Thank You!",
+        "html": "{{3.choices[].message.content}}",
+        "from": "{{SENDER_NAME}} <{{SENDER_EMAIL}}>"
+      },
+      "metadata": {
+        "designer": { "x": 900, "y": 0 },
+        "restore": {
+          "parameters": {
+            "account": { "label": "Gmail Hesabınız" }
+          }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "google-sheets:addRow",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "{{GOOGLE_SHEETS_ID}}",
+        "sheetId": "Siparişler",
+        "includesHeaders": true
+      },
+      "mapper": {
+        "values": {
+          "Tarih": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}",
+          "Sipariş No": "{{1.order_id}}",
+          "Müşteri Adı": "{{1.buyer_name}}",
+          "E-posta": "{{1.buyer_email}}",
+          "Ürün": "{{1.product_title}}",
+          "Tutar": "{{1.total_price}}",
+          "E-posta Gönderildi": "✅ Evet"
+        }
+      },
+      "metadata": {
+        "designer": { "x": 1200, "y": 0 }
+      }
+    }
+  ],
+  "_SETUP_NOTES": {
+    "gerekli_hesaplar": ["Gmail veya SMTP", "OpenAI API", "Google Sheets (opsiyonel)", "Etsy Webhook"],
+    "adimlar": [
+      "1. Make.com hesabınıza giriş yapın",
+      "2. Scenarios → Import Blueprint → Bu JSON dosyasını yükleyin",
+      "3. Gmail bağlantısını kurun (OAuth ile)",
+      "4. OpenAI API anahtarınızı girin",
+      "5. Google Sheets ID'nizi girin",
+      "6. Etsy webhook URL'ini Etsy Developer panelinden kaydedin",
+      "7. Senaryoyu aktif edin ve test edin"
+    ],
+    "degistirmeniz_gerekenler": {
+      "ETSY_WEBHOOK_URL": "Make.com'un size verdiği webhook URL",
+      "GMAIL_ACCOUNT": "Bağladığınız Gmail hesabı",
+      "SENDER_NAME": "Mağaza adınız",
+      "SENDER_EMAIL": "Gönderici e-posta adresiniz",
+      "GOOGLE_SHEETS_ID": "Sheets URL'indeki /d/ ile /edit arasındaki ID"
+    }
+  }
+}

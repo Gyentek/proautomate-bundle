@@ -1,0 +1,138 @@
+{
+  "name": "Sosyal Medya Otomatik İçerik Planlayıcı",
+  "description": "Google Sheets'teki içerik takviminizi okur, ChatGPT ile optimize eder ve Instagram, Twitter/X ve LinkedIn'e otomatik zamanlanmış paylaşım yapar.",
+  "version": 2,
+  "metadata": {
+    "instant": false,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "sequential": true
+    }
+  },
+  "flow": [
+    {
+      "id": 1,
+      "module": "google-sheets:getRows",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "{{GOOGLE_SHEETS_ID}}",
+        "sheetId": "İçerik Takvimi",
+        "includesHeaders": true,
+        "filter": {
+          "condition": {
+            "a": "{{Status}}",
+            "b": "Hazır",
+            "o": "text:equal"
+          }
+        }
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 0, "y": 0 },
+        "restore": {}
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai-gpt-4:createChatCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Sen bir sosyal medya uzmanısın. Verilen konuyu platforma özel, viral olma potansiyeli yüksek içeriklere dönüştürüyorsun. Her platform için ayrı ton ve format kullan."
+          },
+          {
+            "role": "user",
+            "content": "Şu konu için 3 farklı platform içeriği üret:\n\nKonu: {{1.Konu}}\nHedef Kitle: {{1.Hedef_Kitle}}\nMarka Tonu: {{1.Ton}}\nHashtag Sayısı: {{1.Hashtag_Sayisi}}\n\nJSON formatında döndür:\n{\n  'instagram': {'caption': '...', 'hashtags': '...'},\n  'twitter': {'tweet': '...'},\n  'linkedin': {'post': '...'}\n}"
+          }
+        ],
+        "max_tokens": 800,
+        "response_format": "json_object"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 300, "y": 0 }
+      }
+    },
+    {
+      "id": 3,
+      "module": "json:ParseJSON",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "json": "{{2.choices[].message.content}}"
+      },
+      "metadata": {
+        "designer": { "x": 600, "y": 0 }
+      }
+    },
+    {
+      "id": 4,
+      "module": "buffer:CreateSchedule",
+      "version": 1,
+      "parameters": {
+        "account": "{{BUFFER_ACCOUNT}}"
+      },
+      "mapper": {
+        "profile_ids": ["{{INSTAGRAM_PROFILE_ID}}", "{{TWITTER_PROFILE_ID}}", "{{LINKEDIN_PROFILE_ID}}"],
+        "text": "{{3.instagram.caption}} {{3.instagram.hashtags}}",
+        "scheduled_at": "{{1.Yayın_Tarihi}}"
+      },
+      "metadata": {
+        "designer": { "x": 900, "y": 0 }
+      }
+    },
+    {
+      "id": 5,
+      "module": "google-sheets:updateRow",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "{{GOOGLE_SHEETS_ID}}",
+        "sheetId": "İçerik Takvimi",
+        "rowNumber": "{{1.__ROW_NUMBER__}}"
+      },
+      "mapper": {
+        "Status": "✅ Planlandı",
+        "Planlanma_Tarihi": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}",
+        "Buffer_ID": "{{4.id}}"
+      },
+      "metadata": {
+        "designer": { "x": 1200, "y": 0 }
+      }
+    },
+    {
+      "id": 6,
+      "module": "slack:postMessage",
+      "version": 1,
+      "parameters": {
+        "account": "{{SLACK_ACCOUNT}}"
+      },
+      "mapper": {
+        "channel": "{{SLACK_CHANNEL}}",
+        "text": "✅ *Yeni İçerik Planlandı!*\n📅 Tarih: {{1.Yayın_Tarihi}}\n📝 Konu: {{1.Konu}}\n📱 Platformlar: Instagram, Twitter, LinkedIn"
+      },
+      "metadata": {
+        "designer": { "x": 1500, "y": 0 }
+      }
+    }
+  ],
+  "_SETUP_NOTES": {
+    "gerekli_hesaplar": ["Google Sheets", "OpenAI API", "Buffer veya Hootsuite", "Slack (opsiyonel)"],
+    "sheets_sutunlari": ["Konu", "Hedef_Kitle", "Ton", "Hashtag_Sayisi", "Yayın_Tarihi", "Status", "Planlanma_Tarihi", "Buffer_ID"],
+    "calisma_zamani": "Her gün sabah 08:00'de otomatik çalışır ve 'Hazır' statusündeki içerikleri işler",
+    "degistirmeniz_gerekenler": {
+      "GOOGLE_SHEETS_ID": "İçerik takvim spreadsheet ID'si",
+      "BUFFER_ACCOUNT": "Buffer OAuth bağlantısı",
+      "INSTAGRAM_PROFILE_ID": "Buffer'daki Instagram profil ID",
+      "TWITTER_PROFILE_ID": "Buffer'daki Twitter profil ID",
+      "LINKEDIN_PROFILE_ID": "Buffer'daki LinkedIn profil ID",
+      "SLACK_ACCOUNT": "Slack OAuth bağlantısı",
+      "SLACK_CHANNEL": "#sosyal-medya veya istediğiniz kanal"
+    }
+  }
+}
